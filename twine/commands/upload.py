@@ -24,6 +24,8 @@ from twine import package as package_file
 from twine import settings
 from twine import utils
 
+from in_toto.runlib import in_toto_run
+
 
 def skip_upload(
     response: requests.Response, skip_existing: bool, package: package_file.PackageFile
@@ -84,6 +86,8 @@ def upload(upload_settings: settings.Settings, dists: List[str]) -> None:
             package.add_gpg_signature(signatures[signed_name], signed_name)
         elif upload_settings.sign:
             package.sign(upload_settings.sign_with, upload_settings.identity)
+            if upload_settings.in_toto_step:
+                in_toto_run(upload_settings.in_toto_step, dists, [], [], gpg_use_default=True)
 
         resp = repository.upload(package)
 

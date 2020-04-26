@@ -58,6 +58,7 @@ class Settings:
         repository_url: Optional[str] = None,
         verbose: bool = False,
         disable_progress_bar: bool = False,
+        in_toto_step: Optional[str] = None,
         **ignored_kwargs
     ) -> None:
         """Initialize our settings instance.
@@ -133,6 +134,7 @@ class Settings:
         self.auth = auth.Resolver.choose(not non_interactive)(
             self.repository_config, auth.CredentialInput(username, password),
         )
+        self.in_toto_step = in_toto_step
 
     @property
     def username(self) -> Optional[str]:
@@ -261,6 +263,12 @@ class Settings:
             required=False,
             action="store_true",
             help="Disable the progress bar.",
+        )
+        parser.add_argument(
+            "--in-toto-step",
+            default=None,
+            required=False,
+            help="Indicate the step name for use in in-toto link"
         )
 
     @classmethod
